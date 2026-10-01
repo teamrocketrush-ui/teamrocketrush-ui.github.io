@@ -46,7 +46,8 @@
     border-radius:28px;
     padding:28px 28px 40px;
     box-shadow:0 30px 80px -30px rgba(0,0,0,0.45);
-    zoom:0.88;
+    transform:scale(0.924); /* +5% from the originally approved 0.88 — transform, not zoom: zoom breaks position:sticky on descendants in Chromium */
+    transform-origin:top center;
   }
 
   /* ---------- topbar ---------- */
@@ -579,6 +580,18 @@
   @media(max-width:1250px){thead th:nth-child(8),tbody td:nth-child(8){display:none;}}
   @media(max-width:1100px){thead th:nth-child(5),tbody td:nth-child(5),thead th:nth-child(9),tbody td:nth-child(9){display:none;}}
   @media(max-width:980px){.summary{grid-template-columns:1fr 1fr;}}
+
+  /* ---------- sticky header: summary cards + filter row stay put, table scrolls beneath ---------- */
+  .sticky-head{
+    position:sticky;
+    top:0;
+    z-index:30;
+    background:var(--page);
+    padding-top:4px;
+    box-shadow:0 10px 16px -14px rgba(20,27,23,.18);
+  }
+  .sticky-head .summary{margin-bottom:14px;}
+  .sticky-head .toolbar{margin-bottom:14px;padding-bottom:14px;}
 </style>
 </head>
 <body>
@@ -599,35 +612,37 @@
     <div class="month-tabs" id="monthTabs"></div>
   </div>
 
-  <div class="summary" id="summaryStrip"></div>
+  <div class="sticky-head">
+    <div class="summary" id="summaryStrip"></div>
 
-  <div class="toolbar">
-    <div class="toolbar-left">
-      <div class="chips" id="remarkChips"></div>
-      <div class="search">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input placeholder="Search by client or writer name…" id="searchInput" />
-      </div>
-      <div class="filter-wrap">
-        <button class="filter-btn" id="filterBtn">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/></svg>
-          Filter by writer
-          <span class="count" id="filterCount" style="display:none;">0</span>
-        </button>
-        <div class="filter-panel" id="filterPanel">
-          <h5>Show clients for</h5>
-          <div id="filterOptionsList"></div>
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <div class="chips" id="remarkChips"></div>
+        <div class="search">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input placeholder="Search by client or writer name…" id="searchInput" />
         </div>
-      </div>
-      <div class="filter-wrap">
-        <button class="filter-btn" id="activityFilterBtn">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
-          Filter by activity
-          <span class="count" id="activityFilterCount" style="display:none;">0</span>
-        </button>
-        <div class="filter-panel" id="activityFilterPanel">
-          <h5>Show clients whose last post was</h5>
-          <div id="activityFilterOptionsList"></div>
+        <div class="filter-wrap">
+          <button class="filter-btn" id="filterBtn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/></svg>
+            Filter by writer
+            <span class="count" id="filterCount" style="display:none;">0</span>
+          </button>
+          <div class="filter-panel" id="filterPanel">
+            <h5>Show clients for</h5>
+            <div id="filterOptionsList"></div>
+          </div>
+        </div>
+        <div class="filter-wrap">
+          <button class="filter-btn" id="activityFilterBtn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+            Filter by activity
+            <span class="count" id="activityFilterCount" style="display:none;">0</span>
+          </button>
+          <div class="filter-panel" id="activityFilterPanel">
+            <h5>Show clients whose last post was</h5>
+            <div id="activityFilterOptionsList"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -11556,7 +11571,7 @@ const monthData = {
           "date": "Oct 1",
           "full_date": "2026-10-01",
           "title": "I have given business advices that has earned me exactly ₹0.",
-          "likes": 1,
+          "likes": 3,
           "comments": 0,
           "shares": 0,
           "url": "https://www.linkedin.com/posts/rajiv-goyal-13734334_i-have-given-business-advices-that-has-earned-activity-7511277546466947072-73ZS",
@@ -11574,12 +11589,12 @@ const monthData = {
       ],
       "targetLo": 16,
       "deliveryPct": 6,
-      "avgLikes": 1,
-      "medianLikes": 1,
+      "avgLikes": 3,
+      "medianLikes": 3,
       "trendPct": null,
-      "bestWeek": 1,
+      "bestWeek": 3,
       "bestPost": {
-        "likes": 1,
+        "likes": 3,
         "title": "I have given business advices that has earned me exactly ₹0.",
         "url": "https://www.linkedin.com/posts/rajiv-goyal-13734334_i-have-given-business-advices-that-has-earned-activity-7511277546466947072-73ZS"
       },
@@ -11624,7 +11639,7 @@ const monthData = {
           "date": "Oct 1",
           "full_date": "2026-10-01",
           "title": "‘Shaving makes your hair grow back quicker and thicker’ is heard in almost every Indian household has heard. Science say",
-          "likes": 58,
+          "likes": 61,
           "comments": 25,
           "shares": 1,
           "url": "https://www.linkedin.com/posts/rajiv-mehta-banking-professional_shaving-makes-your-hair-grow-back-quicker-activity-7510925965443850240-NDxX",
@@ -11642,12 +11657,12 @@ const monthData = {
       ],
       "targetLo": 12,
       "deliveryPct": 8,
-      "avgLikes": 58,
-      "medianLikes": 58,
+      "avgLikes": 61,
+      "medianLikes": 61,
       "trendPct": null,
-      "bestWeek": 58,
+      "bestWeek": 61,
       "bestPost": {
-        "likes": 58,
+        "likes": 61,
         "title": "‘Shaving makes your hair grow back quicker and thicker’ is heard in al",
         "url": "https://www.linkedin.com/posts/rajiv-mehta-banking-professional_shaving-makes-your-hair-grow-back-quicker-activity-7510925965443850240-NDxX"
       },
@@ -11692,9 +11707,9 @@ const monthData = {
           "date": "Oct 1",
           "full_date": "2026-10-01",
           "title": "Chung Ju-yung took Hyundai Motor Company into crushing debt to build cars the Korean market could not even absorb yet, b",
-          "likes": 24,
-          "comments": 6,
-          "shares": 3,
+          "likes": 66,
+          "comments": 10,
+          "shares": 4,
           "url": "https://www.linkedin.com/posts/janakmehta12345_chung-ju-yung-took-hyundai-motor-company-activity-7511281445038940160-BeIg",
           "post_type": "regular"
         }
@@ -11710,18 +11725,18 @@ const monthData = {
       ],
       "targetLo": 12,
       "deliveryPct": 8,
-      "avgLikes": 24,
-      "medianLikes": 24,
+      "avgLikes": 66,
+      "medianLikes": 66,
       "trendPct": null,
-      "bestWeek": 24,
+      "bestWeek": 66,
       "bestPost": {
-        "likes": 24,
+        "likes": 66,
         "title": "Chung Ju-yung took Hyundai Motor Company into crushing debt to build c",
         "url": "https://www.linkedin.com/posts/janakmehta12345_chung-ju-yung-took-hyundai-motor-company-activity-7511281445038940160-BeIg"
       },
       "remark": {
         "level": "attn",
-        "text": "Need attention: posts · likes"
+        "text": "Need attention: posts"
       },
       "commentLog": []
     },
@@ -11760,7 +11775,7 @@ const monthData = {
           "date": "Oct 1",
           "full_date": "2026-10-01",
           "title": "I have learned more about manufacturing from client complaints than from compliments.",
-          "likes": 19,
+          "likes": 20,
           "comments": 20,
           "shares": 1,
           "url": "https://www.linkedin.com/posts/piyush-dokania-a748b527_i-have-learned-more-about-manufacturing-from-activity-7510927121410740225-9mxT",
@@ -11778,12 +11793,12 @@ const monthData = {
       ],
       "targetLo": 10,
       "deliveryPct": 10,
-      "avgLikes": 19,
-      "medianLikes": 19,
+      "avgLikes": 20,
+      "medianLikes": 20,
       "trendPct": null,
-      "bestWeek": 19,
+      "bestWeek": 20,
       "bestPost": {
-        "likes": 19,
+        "likes": 20,
         "title": "I have learned more about manufacturing from client complaints than fr",
         "url": "https://www.linkedin.com/posts/piyush-dokania-a748b527_i-have-learned-more-about-manufacturing-from-activity-7510927121410740225-9mxT"
       },
@@ -11828,7 +11843,7 @@ const monthData = {
           "date": "Oct 1",
           "full_date": "2026-10-01",
           "title": "A jewellery factory can hit one quality ceiling with existing resources. Breaking the next ceiling may require investmen",
-          "likes": 5,
+          "likes": 7,
           "comments": 1,
           "shares": 0,
           "url": "https://www.linkedin.com/posts/snehal-bandekar-706b5558_a-jewellery-factory-can-hit-one-quality-ceiling-activity-7511273915835568128-mc6N",
@@ -11846,12 +11861,12 @@ const monthData = {
       ],
       "targetLo": 10,
       "deliveryPct": 10,
-      "avgLikes": 5,
-      "medianLikes": 5,
+      "avgLikes": 7,
+      "medianLikes": 7,
       "trendPct": null,
-      "bestWeek": 5,
+      "bestWeek": 7,
       "bestPost": {
-        "likes": 5,
+        "likes": 7,
         "title": "A jewellery factory can hit one quality ceiling with existing resource",
         "url": "https://www.linkedin.com/posts/snehal-bandekar-706b5558_a-jewellery-factory-can-hit-one-quality-ceiling-activity-7511273915835568128-mc6N"
       },
@@ -11977,7 +11992,7 @@ const monthLabels = {
   "2026-10": "October 2026"
 };
 let activeMonth = "2026-10";
-const lastSyncedAt = "2026-10-01 07:53:43";
+const lastSyncedAt = "2026-10-01 11:10:29";
 
 function getWritersForActiveMonth(){
   const clients = monthData[activeMonth] || [];
